@@ -1,6 +1,6 @@
 import json
 
-from ads.models import AdModel, CategoryModel
+from ads.models import Ad, Category
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 
@@ -18,7 +18,7 @@ def index(request):
 @method_decorator(csrf_exempt, name='dispatch')
 class AdsView(View):
     def get(self, request):
-        all_ads = AdModel.objects.all()
+        all_ads = Ad.objects.all()
 
         response = []
 
@@ -37,7 +37,7 @@ class AdsView(View):
     def post(self, request):
         ad_data = json.loads(request.body)
 
-        ad = AdModel.objects.create(
+        ad = Ad.objects.create(
             name=ad_data['name'],
             author=ad_data['author'],
             description=ad_data['description'],
@@ -54,12 +54,12 @@ class AdsView(View):
 
 
 class AdDetailView(DetailView):
-    model = AdModel
+    model = Ad
 
     def get(self, request, *args, **kwargs):
         try:
             ad = self.get_object()
-        except AdModel.DoesNotExist:
+        except Ad.DoesNotExist:
             return JsonResponse({'error': 'Not  Found'}, status=404)
 
         return JsonResponse({
@@ -76,7 +76,7 @@ class AdDetailView(DetailView):
 @method_decorator(csrf_exempt, name='dispatch')
 class CategoriesView(View):
     def get(self, request):
-        all_categories = CategoryModel.objects.all()
+        all_categories = Category.objects.all()
 
         response = []
         for category in all_categories:
@@ -90,7 +90,7 @@ class CategoriesView(View):
     def post(self, request):
         category_data = json.loads(request.body)
 
-        category = CategoryModel.objects.create(
+        category = Category.objects.create(
             name=category_data['name']
         )
 
@@ -101,12 +101,12 @@ class CategoriesView(View):
 
 
 class CategoryDetailView(DetailView):
-    model = CategoryModel
+    model = Category
 
     def get(self, request, *args, **kwargs):
         try:
             category = self.get_object()
-        except CategoryModel.DoesNotExist:
+        except Category.DoesNotExist:
             return JsonResponse({'error': 'Not found'}, status=404)
 
         return JsonResponse({
