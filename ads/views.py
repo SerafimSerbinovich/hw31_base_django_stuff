@@ -55,7 +55,7 @@ class CategoryDetailView(DetailView):
 
 class CategoryListView(ListView):
     model = Category
-    queryset = Category.objects.all()
+    queryset = Category.objects.order_by('name').all()
 
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)
@@ -111,7 +111,7 @@ class CategoryDeleteView(DeleteView):
 
 class AdListView(ListView):
     model = Ad
-    queryset = Ad.objects.all()
+    queryset = Ad.objects.order_by('-price').select_related('author')
 
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)
@@ -194,9 +194,6 @@ class AdUpdateView(UpdateView):
             'is_published': self.object.is_published
 
         })
-
-    def patch(self, request, *args, **kwargs):
-        pass  # todo допилить
 
 
 @method_decorator(csrf_exempt, name='dispatch')
