@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'ads',
     'users'
 ]
@@ -120,6 +121,11 @@ USE_TZ = True
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "my_media")
 MEDIA_URL = "my_media/"
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 4
+}
 
 
 # Static files (CSS, JavaScript, Images)

@@ -18,16 +18,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
+
+router = routers.SimpleRouter()
+router.register('ad', AdViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
 
-    path('ad/', AdListView.as_view()),
-    path('ad/<int:pk>', AdDetailView.as_view()),
-    path('ad/create/', AdCreateView.as_view()),
-    path('ad/<int:pk>/update/', AdUpdateView.as_view()),
-    path('ad/<int:pk>/delete/', AdDeleteView.as_view()),
     path('ad/<int:pk>/upload_image/', AdImageUpload.as_view()),
 
     path('cat/', CategoryListView.as_view()),
@@ -39,6 +38,6 @@ urlpatterns = [
     path('user/', include('users.urls'))
 
 ]
-
+urlpatterns += router.urls
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
