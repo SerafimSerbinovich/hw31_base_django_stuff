@@ -23,6 +23,9 @@ from rest_framework import routers
 router = routers.SimpleRouter()
 router.register('ad', AdViewSet)
 
+selection_router = routers.SimpleRouter()
+selection_router.register('selection', SelectionViewSet)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
@@ -39,5 +42,8 @@ urlpatterns = [
 
 ]
 urlpatterns += router.urls
+urlpatterns += selection_router.urls
+
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

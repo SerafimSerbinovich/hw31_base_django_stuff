@@ -7,7 +7,9 @@ from django.utils.decorators import method_decorator
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView
+from permissions import IsSelectionOwner, IsAdAuthorOrStaff
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 
@@ -28,7 +30,18 @@ class AdViewSet(ModelViewSet):
         'retrieve': AdDetailSerializer,
         'list': AdListSerializer
     }
+
     pagination_class = AdPagination
+
+    default_permission = [AllowAny()]
+    permissions = {"retrieve": [IsAuthenticated()],
+                   "update": [IsAuthenticated(), IsAdAuthorOrStaff()],
+                   "partial_update": [IsAuthenticated(), IsAdAuthorOrStaff()],
+                   "destroy": [IsAuthenticated(), IsAdAuthorOrStaff()]
+                   }
+
+    def get_permissions(self):
+        return self.permissions.get(self.action, self.default_permission)
 
     def get_serializer_class(self):
         return self.serializer_classes.get(self.action, self.default_serializer)
@@ -137,3 +150,19 @@ class AdImageUpload(UpdateView):
         self.object.image = request.FILES.get('image')
         self.object.save()
         return JsonResponse({'name': self.object.name, 'image': self.object.image.url})
+
+
+class SelectionViewSet(ModelViewSet):
+    serializer_class = SelectionSerializer
+    queryset = Selection.objects.all()
+
+    default_permission = [AllowAny()]
+    permissions = {
+                   'create': [IsAuthenticated()],
+                   'update': [IsAuthenticated(), IsSelectionOwner()],
+                   'partial_update': [IsAuthenticated(), IsSelectionOwner()],
+                   'destroy': [IsAuthenticated(), IsSelectionOwner()]
+                   }
+
+    def get_permissions(self):
+        return self.permissions.get(self.action, self.default_permission)
