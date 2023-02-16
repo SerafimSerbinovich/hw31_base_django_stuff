@@ -29,8 +29,8 @@ def csv_to_json(csv_path, json_path, model):
 
 
 if __name__ == '__main__':
-    csv_to_json('category.csv', 'category.json', 'ads.category')
-    csv_to_json('ad.csv', 'ad.json', 'ads.ad')
+    csv_to_json('category.csv', 'category.json', 'ad.category')
+    csv_to_json('ad.csv', 'ad.json', 'ad.ad')
 
     csv_to_json('location.csv', 'location.json', 'users.location')
     csv_to_json('user.csv', 'user.json', 'users.user')

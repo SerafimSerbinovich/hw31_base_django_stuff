@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from users.validators import check_birth_date, check_email_address
 
 
 class Location(models.Model):
@@ -21,6 +22,8 @@ class User(AbstractUser):
     role = models.CharField(choices=CHOICES, max_length=9, default='member')
     age = models.PositiveSmallIntegerField(null=True)
     location = models.ManyToManyField(Location)
+    birth_date = models.DateField(verbose_name='Дата рождения', validators=[check_birth_date], blank=True, null=True)
+    email = models.EmailField(unique=True, blank=True, null=True, validators=[check_email_address])
 
     def save(self, *args, **kwargs):
         self.set_password(self.password)

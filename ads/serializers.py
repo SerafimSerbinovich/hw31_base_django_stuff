@@ -1,9 +1,11 @@
 from ads.models import Ad, Category, Selection
+from ads.validators import not_null
 from rest_framework import serializers
 from users.serializers import UserSerializer, UserLocationSerializer
 
 
 class AdSerializer(serializers.ModelSerializer):
+    is_published = serializers.BooleanField(validators=[not_null], required=False)
     class Meta:
         model = Ad
         fields = '__all__'
